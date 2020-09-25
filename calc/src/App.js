@@ -1,87 +1,75 @@
-import React,{useState, useEffect} from 'react';
+import React, { Component } from 'react';
 import './App.css';
+import ResultComponent from './components/ResultComponent';
+import KeysComponent from "./components/KeysComponent";
 
-function App() {
-  const [currentSum,setCurrentSum]=useState(0);//initialize 0 storing the current value's sum
-  const [clear,setClear]=useState(false);//initialize clear screen
+class App extends Component {
+    constructor(){
+        super();
 
-  useEffect(()=>{
-    if(clear)
-    document.querySelector('#result').value="";
-  })
+        this.state = {
+            result: ""
+        }
+    }
 
-  const Add=(e)=>{
-    e.preventDefault(); 
-    if(clear) setClear(false);
-    let currentNum=document.querySelector('#num').value
-    if(currentNum==='')
-    return;
-    let sum= currentSum+parseInt(currentNum);
-    setCurrentSum(sum);
-    document.querySelector('#num').value="";
-      
-  }
+    onClick = button => {
 
-  const Sub=(e)=>{
-    e.preventDefault(); 
-    if(clear) setClear(false);
-    let currentNum=document.querySelector('#num').value
-    if(currentNum==='')
-    return;
-    let sub= currentSum-parseInt(currentNum);
-    setCurrentSum(sub);
-    document.querySelector('#num').value="";
-      
-  }
+        if(button === "="){
+            this.calculate()
+        }
 
-  const MUlt=(e)=>{
-    e.preventDefault(); 
-    if(clear) setClear(false);
-    let currentNum=document.querySelector('#num').value
-    if(currentNum==='')
-    return;
-    let mult= currentSum*parseInt(currentNum);
-    setCurrentSum(mult);
-    document.querySelector('#num').value="";
-      
-  }
+        else if(button === "C"){
+            this.reset()
+        }
+        else if(button === "CE"){
+            this.backspace()
+        }
 
-  const Div=(e)=>{
-    e.preventDefault(); 
-    if(clear) setClear(false);
-    let currentNum=document.querySelector('#num').value
-    if(currentNum==='')
-    return;
-    let div= currentSum/parseInt(currentNum);
-    setCurrentSum(div);
-    document.querySelector('#num').value="";
-      
-  }
+        else {
+            this.setState({
+                result: this.state.result + button
+            })
+        }
+    };
 
-  const Clear=(e)=>{
-    e.preventDefault();
-    // console.log('sum:', currentSum);
-    // document.querySelector('form').reset();
-    if(clear) setClear(true);
-    setCurrentSum(0);
-  }
 
-  return (
-    <div className="App">
-      <div className="app-title">
-        <h1> Little Citizen 1 Calculator</h1>
-      </div>
-      <form>
-            <input type="text" id="result" value={currentSum}  readOnly placeholder="result" />   
-            <input type="text" id="num" placeholder="enter a number" />
-            <button onClick={Add}>Add</button>
-            <button onClick={Sub}>Sub</button>
-            <button onClick={MUlt}>MUlt</button>
-            <button onClick={Div}>Div</button>
-            <button onClick={Clear}>Clear</button>
-      </form>
-    </div>
-  );
+    calculate = () => {
+        try {
+            this.setState({
+                // eslint-disable-next-line
+                result: (eval(this.state.result) || "" ) + ""
+            })
+        } catch (e) {
+            this.setState({
+                result: "error"
+            })
+
+        }
+    };
+
+    reset = () => {
+        this.setState({
+            result: ""
+        })
+    };
+
+    backspace = () => {
+        this.setState({
+            result: this.state.result.slice(0, -1)
+        })
+    };
+
+    render() {
+        return (
+            <div>
+                <div className="calculator-body">
+                    <h1>Little Citizen 1 Calculator</h1>
+                    <ResultComponent result={this.state.result}/>
+                    <KeysComponent onClick={this.onClick}/>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
