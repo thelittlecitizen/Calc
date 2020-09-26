@@ -63,7 +63,7 @@ class App extends Component {
         return (
             <div>
                 <div className="calculator-body">
-                    <h1>Little Citizen 1 Calculator</h1>
+                    <h1 style={{color:"blue"}}>Little Citizen 1 Calculator</h1>
                     <ResultComponent result={this.state.result}/>
                     <KeysComponent onClick={this.onClick}/>
                 </div>
